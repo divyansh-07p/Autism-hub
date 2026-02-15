@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Briefcase, MapPin, Mail, Heart, CheckCircle } from 'lucide-react';
 import { supabase, VolunteeringOpportunity } from '../../lib/supabase';
-import { useAuth } from '../../contexts/AuthContext';
 
 export function VolunteeringPage() {
-  const { user } = useAuth();
   const [opportunities, setOpportunities] = useState<VolunteeringOpportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [appliedIds, setAppliedIds] = useState<Set<string>>(new Set());

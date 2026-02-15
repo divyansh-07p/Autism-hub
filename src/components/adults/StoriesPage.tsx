@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Plus, Heart, Sparkles, ThumbsUp, BookOpen, X } from 'lucide-react';
 import { supabase, Story, Profile } from '../../lib/supabase';
-import { useAuth } from '../../contexts/AuthContext';
 
 export function StoriesPage() {
-  const { user } = useAuth();
   const [stories, setStories] = useState<(Story & { author: Profile })[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
