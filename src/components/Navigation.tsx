@@ -1,13 +1,14 @@
-import { Home, Gamepad2, Video, Music, Heart, Calendar, Users, BookOpen, Briefcase, LogOut } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { LogOut, Home, Gamepad2, Video, Music, Heart, Calendar, Users, BookOpen, Briefcase } from 'lucide-react';
 
 interface NavigationProps {
   currentView: string;
   setCurrentView: (view: string) => void;
-  userRole: 'child' | 'adult';
-  setUserRole: (role: 'child' | 'adult' | null) => void;
 }
 
-export function Navigation({ currentView, setCurrentView, userRole, setUserRole }: NavigationProps) {
+export function Navigation({ currentView, setCurrentView }: NavigationProps) {
+  const { profile, signOut } = useAuth();
+
   const childViews = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'games', label: 'Games', icon: Gamepad2 },
@@ -23,7 +24,7 @@ export function Navigation({ currentView, setCurrentView, userRole, setUserRole 
     { id: 'mentorship', label: 'Mentorship', icon: Users },
   ];
 
-  const views = userRole === 'child' ? childViews : adultViews;
+  const views = profile?.user_type === 'child' ? childViews : adultViews;
 
   return (
     <nav className="bg-white shadow-lg">
@@ -35,9 +36,7 @@ export function Navigation({ currentView, setCurrentView, userRole, setUserRole 
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Autism Hub
               </h1>
-              <p className="text-xs text-gray-500">
-                {userRole === 'child' ? '👧 Kids Section' : '👥 Adults Section'}
-              </p>
+              <p className="text-xs text-gray-500">Welcome, {profile?.full_name}!</p>
             </div>
           </div>
 
@@ -61,11 +60,11 @@ export function Navigation({ currentView, setCurrentView, userRole, setUserRole 
             })}
 
             <button
-              onClick={() => setUserRole(null)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-orange-600 hover:bg-orange-50 transition-all"
+              onClick={signOut}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-red-600 hover:bg-red-50 transition-all"
             >
               <LogOut className="w-5 h-5" />
-              <span className="hidden md:inline">Switch Role</span>
+              <span className="hidden md:inline">Logout</span>
             </button>
           </div>
         </div>
