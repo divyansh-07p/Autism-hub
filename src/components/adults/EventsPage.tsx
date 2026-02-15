@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Calendar, MapPin, Users, Plus, X, CheckCircle } from 'lucide-react';
 import { supabase, CommunityEvent, Profile } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function EventsPage() {
+  const { user } = useAuth();
   const [events, setEvents] = useState<(CommunityEvent & { organizer: Profile; rsvp_count?: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);

@@ -1,46 +1,7 @@
-import { useState } from 'react';
-import { Puzzle, Brain, Shapes, Dice6, Zap, Leaf } from 'lucide-react';
+import { Puzzle, Brain, Shapes, Dice6 } from 'lucide-react';
 
 export function GamesPage() {
-  const [activeGame, setActiveGame] = useState<string | null>(null);
-  const [launching, setLaunching] = useState<string | null>(null);
-
-  const launchGame = async (gameId: string) => {
-    setLaunching(gameId);
-    try {
-      const response = await fetch(`http://localhost:5000/api/launch-game/${gameId}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        alert(`🎮 ${gameId} game launched!\n\nA new window will open with the game.`);
-      } else {
-        alert(`Failed to launch game: ${data.error}`);
-      }
-    } catch (error) {
-      alert(`⚠️ Error: Make sure the game server is running.\n\nRun in a terminal:\npython server.py`);
-      console.error(error);
-    } finally {
-      setLaunching(null);
-    }
-  };
-
   const games = [
-    {
-      id: 'bubble-pop',
-      title: 'Bubble Pop',
-      description: 'Click and pop the bubbles! Avoid the bombs!',
-      icon: Zap,
-      color: 'from-cyan-400 to-blue-400',
-      isPygame: true,
-    },
-    {
-      id: 'zen-sorting',
-      title: 'Zen Sorting Garden',
-      description: 'Drag stones into bowls of the same color. Calm & relaxing!',
-      icon: Leaf,
-      color: 'from-green-400 to-emerald-400',
-      isPygame: true,
-    },
     {
       id: 1,
       title: 'Color Matching',
@@ -85,26 +46,6 @@ export function GamesPage() {
     },
   ];
 
-  if (activeGame) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 to-blue-100 p-6 flex items-center justify-center">
-        <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md text-center">
-          <p className="text-6xl mb-6">🎮</p>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Game Launched!</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            The Pygame game is running in a new window. Have fun playing!
-          </p>
-          <button
-            onClick={() => setActiveGame(null)}
-            className="bg-gradient-to-r from-blue-400 to-purple-400 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-transform"
-          >
-            Back to Games
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 to-blue-100 p-6">
       <div className="max-w-7xl mx-auto">
@@ -120,21 +61,10 @@ export function GamesPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {games.map((game) => {
             const Icon = game.icon;
-            const isClickable = game.isPygame || typeof game.id === 'string';
-            
             return (
               <button
                 key={game.id}
-                onClick={() => {
-                  if (game.isPygame) {
-                    launchGame(game.id as string);
-                    setActiveGame(game.id as string);
-                  }
-                }}
-                disabled={!isClickable}
-                className={`bg-gradient-to-br ${game.color} rounded-3xl p-8 shadow-2xl hover:scale-105 transition-transform text-left ${
-                  isClickable ? 'cursor-pointer ring-4 ring-white' : 'opacity-75 cursor-not-allowed'
-                }`}
+                className={`bg-gradient-to-br ${game.color} rounded-3xl p-8 shadow-2xl hover:scale-105 transition-transform text-left`}
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="bg-white bg-opacity-30 p-4 rounded-2xl">
@@ -149,13 +79,7 @@ export function GamesPage() {
                 </p>
                 <div className="mt-6">
                   <span className="inline-block bg-white bg-opacity-30 text-white px-6 py-2 rounded-full font-semibold">
-                    {launching === game.id ? (
-                      '🚀 Launching...'
-                    ) : game.isPygame ? (
-                      'Launch Game 🎮'
-                    ) : (
-                      'Coming Soon...'
-                    )}
+                    Play Now!
                   </span>
                 </div>
               </button>

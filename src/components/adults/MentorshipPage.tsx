@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Users, Star, MessageCircle, CheckCircle, X } from 'lucide-react';
 import { supabase, MentorshipProgram } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function MentorshipPage() {
+  const { user } = useAuth();
   const [programs, setPrograms] = useState<MentorshipProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [requestedIds, setRequestedIds] = useState<Set<string>>(new Set());
@@ -13,8 +15,10 @@ export function MentorshipPage() {
 
   useEffect(() => {
     fetchPrograms();
-    fetchRequests();
-  }, []);
+    if (user) {
+      fetchRequests();
+    }
+  }, [user]);
 
   const fetchPrograms = async () => {
     try {

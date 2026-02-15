@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { Auth } from './components/Auth';
 import { Navigation } from './components/Navigation';
-import { WelcomeLanding } from './components/WelcomeLanding';
 import { HomePage } from './components/HomePage';
 import { GamesPage } from './components/children/GamesPage';
 import { VideosPage } from './components/children/VideosPage';
@@ -11,70 +12,58 @@ import { VolunteeringPage } from './components/adults/VolunteeringPage';
 import { MentorshipPage } from './components/adults/MentorshipPage';
 
 function AppContent() {
-  const [userMode, setUserMode] = useState<'kids' | 'adult' | null>(null);
+  const { user, loading } = useAuth();
   const [currentView, setCurrentView] = useState('home');
 
-  const handleModeSelect = (mode: 'kids' | 'adult') => {
-    setUserMode(mode);
-    setCurrentView('home');
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 flex items-center justify-center">
+        <div className="text-3xl font-bold text-gray-700">Loading...</div>
+      </div>
+    );
+  }
 
-  const handleBackToMode = () => {
-    setUserMode(null);
-    setCurrentView('home');
-  };
-
-  if (userMode === null) {
-    return <WelcomeLanding onSelectMode={handleModeSelect} />;
+  if (!user) {
+    return <Auth />;
   }
 
   const renderView = () => {
-    if (userMode === 'kids') {
-      switch (currentView) {
-        case 'home':
-          return <HomePage setCurrentView={setCurrentView} userMode="kids" />;
-        case 'games':
-          return <GamesPage />;
-        case 'videos':
-          return <VideosPage />;
-        case 'singalongs':
-          return <SingAlongsPage />;
-        default:
-          return <HomePage setCurrentView={setCurrentView} userMode="kids" />;
-      }
-    } else {
-      switch (currentView) {
-        case 'home':
-          return <HomePage setCurrentView={setCurrentView} userMode="adult" />;
-        case 'stories':
-          return <StoriesPage />;
-        case 'events':
-          return <EventsPage />;
-        case 'volunteering':
-          return <VolunteeringPage />;
-        case 'mentorship':
-          return <MentorshipPage />;
-        default:
-          return <HomePage setCurrentView={setCurrentView} userMode="adult" />;
-      }
+    switch (currentView) {
+      case 'home':
+        return <HomePage setCurrentView={setCurrentView} />;
+      case 'games':
+        return <GamesPage />;
+      case 'videos':
+        return <VideosPage />;
+      case 'singalongs':
+        return <SingAlongsPage />;
+      case 'stories':
+        return <StoriesPage />;
+      case 'events':
+        return <EventsPage />;
+      case 'volunteering':
+        return <VolunteeringPage />;
+      case 'mentorship':
+        return <MentorshipPage />;
+      default:
+        return <HomePage setCurrentView={setCurrentView} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation 
-        currentView={currentView} 
-        setCurrentView={setCurrentView}
-        userMode={userMode}
-        onBackToMode={handleBackToMode}
-      />
+      <Navigation currentView={currentView} setCurrentView={setCurrentView} />
       {renderView()}
     </div>
   );
 }
 
 function App() {
-  return <AppContent />;
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
 }
 
 export default App;

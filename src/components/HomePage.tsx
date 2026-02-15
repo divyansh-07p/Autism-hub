@@ -1,12 +1,14 @@
+import { useAuth } from '../contexts/AuthContext';
 import { Sparkles, Star, Rocket, Heart } from 'lucide-react';
 
 interface HomePageProps {
   setCurrentView: (view: string) => void;
-  userMode: 'kids' | 'adult';
 }
 
-export function HomePage({ setCurrentView, userMode }: HomePageProps) {
-  if (userMode === 'kids') {
+export function HomePage({ setCurrentView }: HomePageProps) {
+  const { profile } = useAuth();
+
+  if (profile?.user_type === 'child') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 to-blue-100 p-6">
         <div className="max-w-6xl mx-auto">
