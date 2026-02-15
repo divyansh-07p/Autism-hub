@@ -33,31 +33,8 @@ export function StoriesPage() {
 
   const handleCreateStory = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
-
-    setSubmitting(true);
-    try {
-      const { error } = await supabase.from('stories').insert([
-        {
-          author_id: user.id,
-          title,
-          content,
-          category,
-        },
-      ]);
-
-      if (error) throw error;
-
-      setTitle('');
-      setContent('');
-      setCategory('daily-life');
-      setShowCreateModal(false);
-      fetchStories();
-    } catch (error) {
-      console.error('Error creating story:', error);
-    } finally {
-      setSubmitting(false);
-    }
+    alert('Please sign in to share your story');
+    return;
   };
 
   const getCategoryColor = (cat: string) => {

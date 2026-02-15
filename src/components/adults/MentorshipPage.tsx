@@ -13,10 +13,7 @@ export function MentorshipPage() {
 
   useEffect(() => {
     fetchPrograms();
-    if (user) {
-      fetchRequests();
-    }
-  }, [user]);
+  }, []);
 
   const fetchPrograms = async () => {
     try {
@@ -34,55 +31,16 @@ export function MentorshipPage() {
     }
   };
 
-  const fetchRequests = async () => {
-    if (!user) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('mentorship_requests')
-        .select('program_id')
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      const ids = new Set((data || []).map((req) => req.program_id));
-      setRequestedIds(ids);
-    } catch (error) {
-      console.error('Error fetching requests:', error);
-    }
-  };
-
   const handleOpenModal = (program: MentorshipProgram) => {
-    setSelectedProgram(program);
-    setShowRequestModal(true);
+    // Authentication removed - show alert instead
+    alert('Please sign in to request mentorship');
+    return;
   };
 
   const handleSubmitRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !selectedProgram) return;
-
-    setSubmitting(true);
-    try {
-      const { error } = await supabase.from('mentorship_requests').insert([
-        {
-          user_id: user.id,
-          program_id: selectedProgram.id,
-          message,
-          status: 'pending',
-        },
-      ]);
-
-      if (error) throw error;
-
-      setRequestedIds((prev) => new Set([...prev, selectedProgram.id]));
-      setMessage('');
-      setShowRequestModal(false);
-      setSelectedProgram(null);
-    } catch (error) {
-      console.error('Error submitting request:', error);
-    } finally {
-      setSubmitting(false);
-    }
+    alert('Please sign in to submit a mentorship request');
+    return;
   };
 
   if (loading) {

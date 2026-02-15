@@ -48,66 +48,13 @@ export function EventsPage() {
 
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
-
-    setSubmitting(true);
-    try {
-      const { error } = await supabase.from('community_events').insert([
-        {
-          organizer_id: user.id,
-          title,
-          description,
-          location,
-          event_date: eventDate,
-        },
-      ]);
-
-      if (error) throw error;
-
-      setTitle('');
-      setDescription('');
-      setLocation('');
-      setEventDate('');
-      setShowCreateModal(false);
-      fetchEvents();
-    } catch (error) {
-      console.error('Error creating event:', error);
-    } finally {
-      setSubmitting(false);
-    }
+    alert('Please sign in to create events');
+    return;
   };
 
   const handleRSVP = async (eventId: string) => {
-    if (!user) return;
-
-    try {
-      const { data: existingRSVP } = await supabase
-        .from('event_rsvps')
-        .select('*')
-        .eq('event_id', eventId)
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (existingRSVP) {
-        await supabase
-          .from('event_rsvps')
-          .delete()
-          .eq('event_id', eventId)
-          .eq('user_id', user.id);
-      } else {
-        await supabase.from('event_rsvps').insert([
-          {
-            event_id: eventId,
-            user_id: user.id,
-            status: 'going',
-          },
-        ]);
-      }
-
-      fetchEvents();
-    } catch (error) {
-      console.error('Error updating RSVP:', error);
-    }
+    alert('Please sign in to RSVP to events');
+    return;
   };
 
   if (loading) {

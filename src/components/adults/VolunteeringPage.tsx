@@ -9,10 +9,7 @@ export function VolunteeringPage() {
 
   useEffect(() => {
     fetchOpportunities();
-    if (user) {
-      fetchApplications();
-    }
-  }, [user]);
+  }, []);
 
   const fetchOpportunities = async () => {
     try {
@@ -30,43 +27,10 @@ export function VolunteeringPage() {
     }
   };
 
-  const fetchApplications = async () => {
-    if (!user) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('volunteering_applications')
-        .select('opportunity_id')
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      const ids = new Set((data || []).map((app) => app.opportunity_id));
-      setAppliedIds(ids);
-    } catch (error) {
-      console.error('Error fetching applications:', error);
-    }
-  };
-
   const handleApply = async (opportunityId: string) => {
-    if (!user) return;
-
-    try {
-      const { error } = await supabase.from('volunteering_applications').insert([
-        {
-          user_id: user.id,
-          opportunity_id: opportunityId,
-          message: 'I would like to volunteer for this opportunity!',
-          status: 'pending',
-        },
-      ]);
-
-      if (error) throw error;
-
-      setAppliedIds((prev) => new Set([...prev, opportunityId]));
-    } catch (error) {
-      console.error('Error applying:', error);
-    }
+    // Authentication removed - show alert instead
+    alert('Please sign in to apply for volunteering opportunities');
+    return;
   };
 
   if (loading) {
